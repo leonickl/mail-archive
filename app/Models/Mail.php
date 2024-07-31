@@ -6,11 +6,13 @@ use App\People;
 use Carbon\Exceptions\InvalidFormatException;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\UniqueConstraintViolationException;
 use Illuminate\Support\Carbon;
 use PhpMimeMailParser\Parser;
 
 /**
  * @property int $id
+ * @property ?string $message_id
  * @property ?string $subject
  * @property ?Carbon $date
  * @property ?string $from
@@ -21,6 +23,7 @@ use PhpMimeMailParser\Parser;
 class Mail extends Model
 {
     public static function make(
+        ?string $message_id,
         ?string $subject,
         ?Carbon $date,
         ?string $from,
@@ -31,14 +34,13 @@ class Mail extends Model
     {
         $mail = new self;
 
+        $mail->message_id = $message_id;
         $mail->subject = $subject;
         $mail->date = $date;
         $mail->from = $from;
         $mail->to = $to;
         $mail->body_plain = $body_plain;
         $mail->body_html = $body_html;
-
-        $mail->save();
 
         return $mail;
     }
@@ -58,13 +60,24 @@ class Mail extends Model
         }
 
         return self::make(
-            subject: $parser->getHeader('subject'),
+            message_id: $parser->getHeader('message-id') ?: null,
+            subject: $parser->getHeader('subject') ?: null,
             date: $date === false ? null : $carbon,
             from: $from === false ? null : $from,
             to: $to === false ? null : $to,
             body_plain: $parser->getMessageBody(),
             body_html: $parser->getMessageBody('html'),
         );
+    }
+
+    public function tryToSave(): void
+    {
+        try {
+            $this->save();
+            echo 'saved ' . $this->message_id . PHP_EOL;
+        } catch (UniqueConstraintViolationException) {
+            echo 'skipping ' . $this->message_id . PHP_EOL;
+        }
     }
 
     protected function casts(): array

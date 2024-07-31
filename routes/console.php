@@ -9,16 +9,13 @@ Artisan::command('inspire', function () {
     $this->comment(Inspiring::quote());
 })->purpose('Display an inspiring quote')->hourly();
 
-Artisan::command('import {year?}', function (?string $year = null) {
-    $path = $year === null ? 'mails' : 'mails/' . $year;
-
-    if (Storage::directoryMissing($path)) {
+Artisan::command('import', function () {
+    if (Storage::directoryMissing('mails')) {
         $this->error('directory not found');
     }
 
-    collect(Storage::allFiles($path))
+    collect(Storage::allFiles('mails'))
         ->each(function (string $file) {
-            $this->line($file);
-            return Mail::parse(storage_path('app/' . $file));
+            Mail::parse(storage_path('app/' . $file))->tryToSave();
         });
 });

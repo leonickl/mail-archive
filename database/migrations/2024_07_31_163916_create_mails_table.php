@@ -12,6 +12,7 @@ return new class extends Migration {
     {
         Schema::create('mails', function (Blueprint $table) {
             $table->id();
+            $table->string('message_id')->nullable();
             $table->string('subject')->nullable();
             $table->dateTime('date')->nullable();
             $table->string('from')->nullable();
@@ -19,6 +20,8 @@ return new class extends Migration {
             $table->string('body_plain')->nullable();
             $table->string('body_html')->nullable();
             $table->timestamps();
+
+            $table->unique(['message_id', 'from', 'to', 'subject']);
         });
     }
 
