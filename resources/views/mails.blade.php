@@ -1,6 +1,6 @@
 @php /** @var Illuminate\Contracts\Pagination\LengthAwarePaginator $mails */ @endphp
 
-<x-app>
+<x-app title="Mails">
 
     <div class="action">
         <div>
@@ -36,7 +36,7 @@
         @php /** @var App\Models\Mail $mail */ @endphp
         @forelse($mails as $mail)
             <tr>
-                <th><a href="{{ route('mail', $mail) }}">{{ $mail->id }}</a></th>
+                <th><a href="{{ route('mail', $mail) }}" target="_blank">{{ $mail->id }}</a></th>
                 <td>{{ $mail->subject ?? '---' }}</td>
                 <td>{{ $mail->date?->format('d.m.Y') ?? '---' }}</td>
                 <td>{{ $mail->from?->string() ?? '---' }}</td>

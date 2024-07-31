@@ -1,17 +1,23 @@
 @php /** @var App\Models\Mail $mail */ @endphp
 
-<x-app>
+<x-app title="{{ $mail->subject }}">
 
-    <div>
+    <div class="data-row">
         <div>{{ $mail->date }}</div>
+        <x-sep/>
         <div>{{ $mail->subject }}</div>
-    </div>
-
-    <div>
+        <x-sep/>
         <div>{{ $mail->from?->string() }}</div>
+        <x-sep/>
         <div>{{ $mail->to?->string() }}</div>
     </div>
 
-    <pre>{{ trim($mail->body_plain ?? '') }}</pre>
+    @unless(trim($mail->body_plain) === '')
+        <pre>{{ trim($mail->body_plain ?? '') }}</pre>
+    @endunless
+
+    @unless(trim($mail->body_html) === '')
+        <iframe class="body-html" src="{{ route('mail-body', $mail) }}"></iframe>
+    @endunless
 
 </x-app>

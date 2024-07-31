@@ -3,7 +3,7 @@
 <html>
 
 <head>
-    <title>{{ $title ?? 'Mail Archive' }}</title>
+    <title>Mail Archive - {{ $title ?? '---' }}</title>
     @vite('resources/css/app.css')
 </head>
 

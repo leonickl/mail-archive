@@ -7,6 +7,8 @@ body {
     width: 100%;
     display: flex;
     flex-direction: column;
+    align-items: center;
+    gap: 30px;
 }
 
 table {
@@ -72,4 +74,27 @@ input.styled {
     padding: 4px;
     border-radius: 5px;
     background: #203535;
+}
+
+.body-html {
+    width: 80%;
+    height: 500px;
+    max-height: 80%;
+}
+
+.data-row {
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+    margin: 40px;
+}
+
+pre, iframe {
+    border: 1px green solid;
+    padding: 30px;
+    width: 80%;
+}
+
+pre {
+    white-space: preserve;
 }
