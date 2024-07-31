@@ -15,6 +15,7 @@ Artisan::command('import', function () {
     }
 
     collect(Storage::allFiles('mails'))
+        ->filter(fn(string $file) => str_ends_with($file, '.eml'))
         ->each(function (string $file) {
             Mail::parse(storage_path('app/' . $file))->tryToSave();
         });
