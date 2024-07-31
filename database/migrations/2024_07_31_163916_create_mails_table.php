@@ -15,8 +15,8 @@ return new class extends Migration {
             $table->string('message_id')->nullable();
             $table->string('subject')->nullable();
             $table->dateTime('date')->nullable();
-            $table->string('from')->nullable();
-            $table->string('to')->nullable();
+            $table->json('from');
+            $table->json('to');
             $table->string('body_plain')->nullable();
             $table->string('body_html')->nullable();
             $table->timestamps();

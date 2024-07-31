@@ -6,26 +6,21 @@ final readonly class Person
 {
     private function __construct(
         private string  $address,
-        private ?string $name,
+        private string $name,
     ) {}
 
-    public static function new(string $string): ?Person
+    public static function new(object $data): Person
     {
-        // Regular expression to match the name and email format
-        $pattern_with_name = '/^(.+?)\s*<(.+?@.+?\..+?)>$/';
-        $pattern_without_name = '/^(.+?@.+?\..+?)$/';
-
-        if (preg_match($pattern_with_name, $string, $matches)) {
-            return new self(address: $matches[2], name: trim($matches[1]));
-        } elseif (preg_match($pattern_without_name, $string, $matches)) {
-            return new self(address: $matches[1], name: null);
-        }
-
-        return null;
+        return new self(address: trim($data->address), name: trim($data->display));
     }
 
     public function string(): string
     {
-        return $this->name ?? $this->address;
+        return $this->name === '' ? $this->address : $this->name;
+    }
+
+    public function longString(): string
+    {
+        return $this->name . ' <' . $this->address . '>';
     }
 }

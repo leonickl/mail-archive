@@ -7,9 +7,9 @@
         <x-sep/>
         <div>{{ $mail->subject }}</div>
         <x-sep/>
-        <div>{{ $mail->from?->string() }}</div>
+        <div>{{ $mail->from->longString() }}</div>
         <x-sep/>
-        <div>{{ $mail->to?->string() }}</div>
+        <div>{{ $mail->to->longString() }}</div>
     </div>
 
     @unless(trim($mail->body_plain) === '')

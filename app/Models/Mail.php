@@ -15,8 +15,8 @@ use PhpMimeMailParser\Parser;
  * @property ?string $message_id
  * @property ?string $subject
  * @property ?Carbon $date
- * @property ?string $from
- * @property ?string $to
+ * @property People $from
+ * @property People $to
  * @property ?string $body_plain
  * @property ?string $body_html
  */
@@ -26,8 +26,8 @@ class Mail extends Model
         ?string $message_id,
         ?string $subject,
         ?Carbon $date,
-        ?string $from,
-        ?string $to,
+        array $from,
+        array $to,
         ?string $body_plain,
         ?string $body_html,
     ): self
@@ -37,8 +37,8 @@ class Mail extends Model
         $mail->message_id = $message_id;
         $mail->subject = $subject;
         $mail->date = $date;
-        $mail->from = $from;
-        $mail->to = $to;
+        $mail->from = json_encode($from);
+        $mail->to = json_encode($to);
         $mail->body_plain = $body_plain;
         $mail->body_html = $body_html;
 
@@ -50,8 +50,6 @@ class Mail extends Model
         $parser = (new Parser)->setText(file_get_contents($path));
 
         $date = $parser->getHeader('date');
-        $from = $parser->getHeader('from');
-        $to = $parser->getHeader('to');
 
         try {
             $carbon = Carbon::make($date);
@@ -63,8 +61,8 @@ class Mail extends Model
             message_id: $parser->getHeader('message-id') ?: null,
             subject: $parser->getHeader('subject') ?: null,
             date: $date === false ? null : $carbon,
-            from: $from === false ? null : $from,
-            to: $to === false ? null : $to,
+            from: $parser->getAddresses('from'),
+            to: $parser->getAddresses('to'),
             body_plain: $parser->getMessageBody(),
             body_html: $parser->getMessageBody('html'),
         );
@@ -87,11 +85,11 @@ class Mail extends Model
 
     protected function from(): Attribute
     {
-        return Attribute::get(fn(?string $from) => $from === null ? null : People::new($from));
+        return Attribute::get(fn(string $from) => People::new($from));
     }
 
     protected function to(): Attribute
     {
-        return Attribute::get(fn(?string $to) => $to === null ? null : People::new($to));
+        return Attribute::get(fn(string $to) => People::new($to));
     }
 }

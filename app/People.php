@@ -9,18 +9,27 @@ final readonly class People
      */
     private function __construct(private array $people) {}
 
-    public static function new(string $string): People
+    public static function new(string $string): ?People
     {
         return new self(array_filter(array_map(
-            fn(string $s) => Person::new($s),
-            explode(',', $string),
+            fn(object $person) => Person::new($person),
+            json_decode($string),
         )));
     }
 
     public function string(): string
     {
-        return join(', ', array_map(
+        $string = join(', ', array_map(
             fn(Person $person) => $person->string(),
+            $this->people,
+        ));
+        return strlen($string) > 30 ? substr($string, 0, 27) . '...' : $string;
+    }
+
+    public function longString(): string
+    {
+        return join(', ', array_map(
+            fn(Person $person) => $person->longString(),
             $this->people,
         ));
     }
