@@ -1,0 +1,75 @@
+* {
+    background-color: #203535;
+    color: #43db86;
+}
+
+body {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+table {
+    margin: 40px;
+    box-sizing: border-box;
+}
+
+td, th {
+    border: 1px black solid;
+}
+
+td, th {
+    padding: 7px;
+}
+
+.center {
+    width: 100%;
+    text-align: center;
+}
+
+td:nth-child(2) {
+    white-space: wrap;
+    word-wrap: anywhere;
+    max-width: 700px;
+}
+
+td:nth-child(4), td:nth-child(5) {
+    white-space: wrap;
+    word-wrap: anywhere;
+    max-width: 500px;
+}
+
+a, a:visited {
+    text-decoration: none;
+    color: inherit;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+.action {
+    margin: 40px;
+    display: flex;
+    flex-direction: row;
+    gap: 40px;
+    justify-content: center;
+}
+
+.action > div {
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+    align-items: center;
+}
+
+.action span, .action a {
+    padding: 4px;
+}
+
+input.styled {
+    border: 1px #43db86 solid;
+    padding: 4px;
+    border-radius: 5px;
+    background: #203535;
+}
