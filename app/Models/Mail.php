@@ -19,6 +19,7 @@ use PhpMimeMailParser\Parser;
  * @property People $to
  * @property ?string $body_plain
  * @property ?string $body_html
+ * @property string $eml_path
  */
 class Mail extends Model
 {
@@ -30,6 +31,7 @@ class Mail extends Model
         array $to,
         ?string $body_plain,
         ?string $body_html,
+        string $eml_path,
     ): self
     {
         $mail = new self;
@@ -41,13 +43,14 @@ class Mail extends Model
         $mail->to = json_encode($to);
         $mail->body_plain = $body_plain;
         $mail->body_html = $body_html;
+        $mail->eml_path = $eml_path;
 
         return $mail;
     }
 
     public static function parse(string $path): self
     {
-        $parser = (new Parser)->setText(file_get_contents($path));
+        $parser = (new Parser)->setText(file_get_contents(storage_path('app/' . $path)));
 
         $date = $parser->getHeader('date');
 
@@ -65,6 +68,7 @@ class Mail extends Model
             to: $parser->getAddresses('to'),
             body_plain: $parser->getMessageBody(),
             body_html: $parser->getMessageBody('html'),
+            eml_path: $path,
         );
     }
 

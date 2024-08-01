@@ -19,6 +19,7 @@ return new class extends Migration {
             $table->json('to');
             $table->string('body_plain')->nullable();
             $table->string('body_html')->nullable();
+            $table->string('eml_path');
             $table->timestamps();
 
             $table->unique(['message_id', 'from', 'to', 'subject']);
