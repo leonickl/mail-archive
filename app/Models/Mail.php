@@ -50,7 +50,7 @@ class Mail extends Model
 
     public static function parse(string $path): self
     {
-        $parser = (new Parser)->setText(file_get_contents(storage_path('app/' . $path)));
+        $parser = (new Parser)->setText(file_get_contents(env('STORAGE_PATH') . '/' . $path));
 
         $date = $parser->getHeader('date');
 
