@@ -19,11 +19,10 @@ final readonly class People
 
     public function string(): string
     {
-        $string = join(', ', array_map(
+        return join(', ', array_map(
             fn(Person $person) => $person->string(),
             $this->people,
         ));
-        return strlen($string) > 30 ? substr($string, 0, 27) . '...' : $string;
     }
 
     public function longString(): string

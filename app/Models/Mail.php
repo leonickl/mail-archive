@@ -96,4 +96,18 @@ class Mail extends Model
     {
         return Attribute::get(fn(string $to) => People::new($to));
     }
+
+    #[\Override]
+    public function toArray(): array
+    {
+        return [
+            'id' => $this->id,
+            'subject' => $this->subject,
+            'date' => $this->date,
+            'from' => $this->from?->string(),
+            'from_long' => $this->from?->longString(),
+            'to' => $this->to?->string(),
+            'to_long' => $this->to?->longString(),
+        ];
+    }
 }
