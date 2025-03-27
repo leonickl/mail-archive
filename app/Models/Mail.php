@@ -61,13 +61,14 @@ class Mail extends Model
         }
 
         return self::make(
-            message_id: $parser->getHeader('message-id') ?: null,
-            subject: $parser->getHeader('subject') ?: null,
+            message_id: $parser->getHeader('message-id')
+                ?: $date . '-' . utf8_encode($parser->getHeader('subject')),
+            subject: utf8_encode($parser->getHeader('subject')) ?: null,
             date: $date === false ? null : $carbon,
             from: $parser->getAddresses('from'),
             to: $parser->getAddresses('to'),
-            body_plain: $parser->getMessageBody(),
-            body_html: $parser->getMessageBody('html'),
+            body_plain: utf8_encode($parser->getMessageBody()),
+            body_html: utf8_encode($parser->getMessageBody('html')),
             eml_path: $path,
         );
     }
@@ -78,7 +79,7 @@ class Mail extends Model
             $this->save();
             echo 'saved ' . $this->message_id . PHP_EOL;
         } catch (UniqueConstraintViolationException) {
-            echo 'skipping ' . $this->message_id . PHP_EOL;
+            // echo 'skipping ' . $this->message_id . PHP_EOL;
         }
     }
 

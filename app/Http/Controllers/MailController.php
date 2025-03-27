@@ -8,9 +8,13 @@ class MailController extends Controller
 {
     public function index()
     {
-        return Mail::query()
+        $mails = Mail::query()
             ->orderByDesc('date')
             ->paginate(20);
+
+        return response()->json($mails, 200, [
+            'Content-Type' => 'application/json; charset=UTF-8',
+        ], JSON_UNESCAPED_UNICODE);
     }
 
     public function show(Mail $mail)
@@ -20,7 +24,7 @@ class MailController extends Controller
 
     public function html(Mail $mail)
     {
-        return $mail->body_html;
+        return ($mail->body_html);
     }
 
     public function plain(Mail $mail)
