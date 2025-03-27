@@ -18,4 +18,4 @@ Archive your mails as `.eml` files and access them locally within your browser.
 
 ## New UI
 
--   You can also use [mail-frontend](https://github.com/gehmasse/mail-frontend) to view the archive in a more modern way.
+-   You can also use [mail-frontend]([https://github.com/gehmasse/mail-frontend](https://github.com/Gehmasse/mail-frontend/tree/mail-archive)) at branch `mail-archive` to view the archive in a more modern way.
