@@ -3,15 +3,14 @@
 use App\Models\Mail;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 Artisan::command('import', function () {
-    if (Storage::disk('files')->directoryMissing('mails')) {
-        $this->error('directory not found');
-    }
+    $files = Storage::disk('mails')->allFiles();
 
-    collect(Storage::disk('files')->allFiles('mails'))
-        ->filter(fn(string $file) => str_ends_with($file, '.eml'))
-        ->each(function (string $file) {
+    foreach($files as $file) {
+        if(Str::endsWith($file, '.eml')) {
             Mail::parse($file)->tryToSave();
-        });
+        }
+    }
 });

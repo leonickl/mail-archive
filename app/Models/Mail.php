@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\UniqueConstraintViolationException;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Storage;
 use PhpMimeMailParser\Parser;
 
 /**
@@ -50,7 +51,9 @@ class Mail extends Model
 
     public static function parse(string $path): self
     {
-        $parser = (new Parser)->setText(file_get_contents(env('STORAGE_PATH') . '/' . $path));
+        $contents = Storage::disk('mails')->get($path);
+
+        $parser = (new Parser)->setText($contents);
 
         $date = $parser->getHeader('date');
 

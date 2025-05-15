@@ -36,10 +36,10 @@ return [
             'throw' => false,
         ],
 
-        'files' => [
+        'mails' => [
             'driver' => 'local',
-            'root' => env('STORAGE_PATH'),
-            'throw' => false,
+            'root' => '/mails',
+            'throw' => true,
         ],
 
         'public' => [
