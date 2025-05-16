@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('mails', function (Blueprint $table) {
             $table->id();
+
             $table->string('eml_path');
             $table->longText('file');
 
@@ -24,9 +25,9 @@ return new class extends Migration
             $table->mediumText('body_plain')->nullable();
             $table->mediumText('body_html')->nullable();
 
-            $table->timestamps();
+            $table->unique('eml_path');
 
-            $table->unique(['message_id']); // always unique?
+            $table->timestamps();
         });
     }
 

@@ -6,14 +6,14 @@ use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
-Artisan::command('import', function () {
+Artisan::command('mail:import', function () {
     $files = Storage::disk('mails')->allFiles();
 
     foreach ($files as $eml_path) {
         if (Str::endsWith($eml_path, '.eml')) {
             $file = Storage::disk('mails')->get($eml_path);
 
-            $file = mb_convert_encoding($file,'utf-8');
+            $file = mb_convert_encoding($file, 'utf-8');
 
             try {
                 $mail = Mail::create(compact('eml_path', 'file'));
@@ -22,10 +22,18 @@ Artisan::command('import', function () {
             } catch (UniqueConstraintViolationException) {
                 echo 'skipping '.$eml_path.PHP_EOL;
             } catch (Exception $e) {
-                echo 'error for ' . $eml_path . PHP_EOL;
-                
+                echo 'error for '.$eml_path.PHP_EOL;
+
                 throw $e;
             }
         }
+    }
+});
+
+Artisan::command('mail:parse', function () {
+    foreach (Mail::query()->lazy() as $mail) {
+        $mail->parse()->save();
+
+        echo 'parsed '.$mail->eml_path.PHP_EOL;
     }
 });

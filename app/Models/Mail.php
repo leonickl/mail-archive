@@ -7,8 +7,9 @@ use Carbon\Exceptions\InvalidFormatException;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Carbon;
-use Illuminate\Support\Facades\Storage;
 use PhpMimeMailParser\Parser;
+
+use function GuzzleHttp\json_encode;
 
 /**
  * @property int $id
@@ -26,11 +27,9 @@ class Mail extends Model
 {
     protected $fillable = ['eml_path', 'file'];
 
-    public static function parse(string $path): self
+    public function parse(): self
     {
-        $contents = Storage::disk('mails')->get($path);
-
-        $parser = (new Parser)->setText($contents);
+        $parser = (new Parser)->setText($this->file);
 
         $date = $parser->getHeader('date');
 
@@ -40,17 +39,16 @@ class Mail extends Model
             $carbon = null;
         }
 
-        $message_id = $parser->getHeader('message-id')
-            ?: $date.'-'.utf8_encode($parser->getHeader('subject'));
-        $subject = utf8_encode($parser->getHeader('subject')) ?: null;
-        $date = $date === false ? null : $carbon;
-        $from = $parser->getAddresses('from');
-        $to = $parser->getAddresses('to');
-        $body_plain = utf8_encode($parser->getMessageBody());
-        $body_html = utf8_encode($parser->getMessageBody('html'));
-        $eml_path = $path;
+        $this->message_id = $parser->getHeader('message-id')
+            ?: $date.'-'.mb_convert_encoding($parser->getHeader('subject'), 'utf-8');
+        $this->subject = mb_convert_encoding($parser->getHeader('subject'), 'utf-8') ?: null;
+        $this->date = $date === false ? null : $carbon;
+        $this->from = json_encode($parser->getAddresses('from'));
+        $this->to = json_encode($parser->getAddresses('to'));
+        $this->body_plain = mb_convert_encoding($parser->getMessageBody(), 'utf-8');
+        $this->body_html = mb_convert_encoding($parser->getMessageBody('html'), 'utf-8');
 
-        dd();
+        return $this;
     }
 
     protected function casts(): array
