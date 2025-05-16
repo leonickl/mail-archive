@@ -10,7 +10,7 @@ class MailController extends Controller
     {
         $mails = Mail::query()
             ->orderByDesc('date')
-            ->paginate(20);
+            ->paginate(20, columns: ['id', 'subject', 'date', 'from', 'to']);
 
         return response()->json($mails, 200, [
             'Content-Type' => 'application/json; charset=UTF-8',
