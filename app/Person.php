@@ -5,7 +5,7 @@ namespace App;
 final readonly class Person
 {
     private function __construct(
-        private string  $address,
+        private string $address,
         private string $name,
     ) {}
 
@@ -21,6 +21,6 @@ final readonly class Person
 
     public function longString(): string
     {
-        return $this->name . ' <' . $this->address . '>';
+        return $this->name.' <'.$this->address.'>';
     }
 }

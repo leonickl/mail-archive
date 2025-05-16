@@ -6,7 +6,6 @@ use App\People;
 use Carbon\Exceptions\InvalidFormatException;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\UniqueConstraintViolationException;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Storage;
 use PhpMimeMailParser\Parser;
@@ -15,7 +14,6 @@ use PhpMimeMailParser\Parser;
  * @property int $id
  * @property string $eml_path
  * @property string $file
- * 
  * @property ?string $message_id
  * @property ?string $subject
  * @property ?Carbon $date
@@ -41,7 +39,7 @@ class Mail extends Model
         }
 
         $message_id = $parser->getHeader('message-id')
-            ?: $date . '-' . utf8_encode($parser->getHeader('subject'));
+            ?: $date.'-'.utf8_encode($parser->getHeader('subject'));
         $subject = utf8_encode($parser->getHeader('subject')) ?: null;
         $date = $date === false ? null : $carbon;
         $from = $parser->getAddresses('from');
@@ -60,12 +58,12 @@ class Mail extends Model
 
     protected function from(): Attribute
     {
-        return Attribute::get(fn(string $from) => People::new($from));
+        return Attribute::get(fn (string $from) => People::new($from));
     }
 
     protected function to(): Attribute
     {
-        return Attribute::get(fn(string $to) => People::new($to));
+        return Attribute::get(fn (string $to) => People::new($to));
     }
 
     #[\Override]

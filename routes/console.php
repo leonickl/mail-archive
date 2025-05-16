@@ -9,13 +9,13 @@ use Illuminate\Support\Str;
 Artisan::command('import', function () {
     $files = Storage::disk('mails')->allFiles();
 
-    foreach($files as $file) {
-        if(Str::endsWith($file, '.eml')) {
+    foreach ($files as $file) {
+        if (Str::endsWith($file, '.eml')) {
             try {
                 Mail::create(compact('file'));
-                echo 'saved ' . $this->message_id . PHP_EOL;
+                echo 'saved '.$this->message_id.PHP_EOL;
             } catch (UniqueConstraintViolationException) {
-                echo 'skipping ' . $this->message_id . PHP_EOL;
+                echo 'skipping '.$this->message_id.PHP_EOL;
             }
         }
     }

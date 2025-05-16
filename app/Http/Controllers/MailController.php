@@ -24,7 +24,7 @@ class MailController extends Controller
 
     public function html(Mail $mail)
     {
-        return ($mail->body_html);
+        return $mail->body_html;
     }
 
     public function plain(Mail $mail)
