@@ -8,9 +8,18 @@ class MailController extends Controller
 {
     public function index()
     {
-        $mails = Mail::query()
-            ->orderByDesc('date')
-            ->paginate(20, columns: ['id', 'subject', 'date', 'from', 'to']);
+        $search = request('search');
+        $limit = request()->integer('limit', 20);
+
+        if ($search) {
+            $mails = Mail::search($search)
+                ->orderByDesc('date')
+                ->paginate($limit);
+        } else {
+            $mails = Mail::query()
+                ->orderByDesc('date')
+                ->paginate($limit, columns: ['id', 'subject', 'date', 'from', 'to']);
+        }
 
         return response()->json($mails, 200, [
             'Content-Type' => 'application/json; charset=UTF-8',

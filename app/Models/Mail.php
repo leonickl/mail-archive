@@ -7,6 +7,7 @@ use Carbon\Exceptions\InvalidFormatException;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Carbon;
+use Laravel\Scout\Searchable;
 use PhpMimeMailParser\Parser;
 
 use function GuzzleHttp\json_encode;
@@ -25,6 +26,8 @@ use function GuzzleHttp\json_encode;
  */
 class Mail extends Model
 {
+    use Searchable;
+
     protected $fillable = ['eml_path', 'file'];
 
     public function parse(): self
@@ -77,6 +80,16 @@ class Mail extends Model
             'from_long' => $this->from?->longString(),
             'to' => $this->to?->string(),
             'to_long' => $this->to?->longString(),
+        ];
+    }
+
+    public function toSearchableArray(): array
+    {
+        return [
+            'subject' => $this->subject,
+            'date' => $this->date,
+            'from' => $this->from?->longString(),
+            'to' => $this->to?->longString(),
         ];
     }
 }
