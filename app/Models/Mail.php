@@ -24,6 +24,8 @@ use PhpMimeMailParser\Parser;
  */
 class Mail extends Model
 {
+    protected $fillable = ['eml_path', 'file'];
+
     public static function parse(string $path): self
     {
         $contents = Storage::disk('mails')->get($path);

@@ -9,13 +9,22 @@ use Illuminate\Support\Str;
 Artisan::command('import', function () {
     $files = Storage::disk('mails')->allFiles();
 
-    foreach ($files as $file) {
-        if (Str::endsWith($file, '.eml')) {
+    foreach ($files as $eml_path) {
+        if (Str::endsWith($eml_path, '.eml')) {
+            $file = Storage::disk('mails')->get($eml_path);
+
+            $file = mb_convert_encoding($file,'utf-8');
+
             try {
-                Mail::create(compact('file'));
-                echo 'saved '.$this->message_id.PHP_EOL;
+                $mail = Mail::create(compact('eml_path', 'file'));
+
+                echo 'saved '.$eml_path.PHP_EOL;
             } catch (UniqueConstraintViolationException) {
-                echo 'skipping '.$this->message_id.PHP_EOL;
+                echo 'skipping '.$eml_path.PHP_EOL;
+            } catch (Exception $e) {
+                echo 'error for ' . $eml_path . PHP_EOL;
+                
+                throw $e;
             }
         }
     }
