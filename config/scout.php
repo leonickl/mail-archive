@@ -18,7 +18,7 @@ return [
     |
     */
 
-    'driver' => env('SCOUT_DRIVER', 'algolia'),
+    'driver' => env('SCOUT_DRIVER', 'meilisearch'),
 
     /*
     |--------------------------------------------------------------------------
@@ -143,7 +143,7 @@ return [
         'key' => env('MEILISEARCH_KEY'),
         'index-settings' => [
             Mail::class => [
-                'filterableAttributes' => ['subject', 'date', 'from', 'to'],
+                'filterableAttributes' => ['id', 'subject', 'date', 'from', 'to'],
                 'sortableAttributes' => ['date'],
             ],
         ],

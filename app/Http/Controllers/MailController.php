@@ -12,9 +12,13 @@ class MailController extends Controller
         $limit = request()->integer('limit', 20);
 
         if ($search) {
-            $mails = Mail::search($search)
+            $ids = Mail::search($search)
+                ->get()
+                ->pluck('id');
+
+            $mails = Mail::whereIn('id', $ids)
                 ->orderByDesc('date')
-                ->paginate($limit);
+                ->paginate($limit, columns: ['id', 'subject', 'date', 'from', 'to']);
         } else {
             $mails = Mail::query()
                 ->orderByDesc('date')

@@ -75,7 +75,7 @@ class Mail extends Model
         return [
             'id' => $this->id,
             'subject' => $this->subject,
-            'date' => $this->date,
+            'date' => $this->date?->toDateTimeString(),
             'from' => $this->from?->string(),
             'from_long' => $this->from?->longString(),
             'to' => $this->to?->string(),
@@ -86,6 +86,7 @@ class Mail extends Model
     public function toSearchableArray(): array
     {
         return [
+            'id' => $this->id,
             'subject' => $this->subject,
             'date' => $this->date,
             'from' => $this->from?->longString(),
